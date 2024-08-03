@@ -1,21 +1,26 @@
 import express from "express";
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import authRoute from "./api/routes/auth.js";
+import usersRoute from "./api/routes/users.js";
+import hotelsRoute from "./api/routes/hotels.js";
+import roomsRoute from "./api/routes/rooms.js"
 
 const app = express();
 dotenv.config();
-console.log('All env variables:', process.env);
 
 const connect = async() => {
     try {
-    await mongoose.connect(process.env.MONGO);
+    await mongoose.connect(process.env.MONGO, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        tlsAllowInvalidCertificates: true 
+    });
         console.log("connect")
     } catch (error) {
         throw error
     }
 }
-
-console.log('MONGO_URI:', process.env.MONGO);
 
 mongoose.connection.on("disconnected", () => {
     console.log("Mongoose disconnected");
@@ -25,13 +30,15 @@ mongoose.connection.on("disconnected", () => {
   console.log("Mongoose disconnected");
 });
 
-//middlewares
+// middlewares
+app.use(express.json)
+
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/hotels", hotelsRoute);
 app.use("/api/rooms", roomsRoute);
 
-app.listen(8000, () => {
+app.listen(8800, () => {
     connect()
-    console.log("weszło");
-})
+    console.log("Server is running on port 8800");
+});
