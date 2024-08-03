@@ -25,6 +25,12 @@ mongoose.connection.on("disconnected", () => {
   console.log("Mongoose disconnected");
 });
 
+//middlewares
+app.use("/api/auth", authRoute);
+app.use("/api/users", usersRoute);
+app.use("/api/hotels", hotelsRoute);
+app.use("/api/rooms", roomsRoute);
+
 app.listen(8000, () => {
     connect()
     console.log("weszło");
